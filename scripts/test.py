@@ -7,7 +7,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from utils.preprocess import AudioDataset
-from utils.cnn import AudioCNN
+from nets.cnn import AudioCNN
 from utils.hyper_parameters import HyperParameters
 
 
@@ -17,7 +17,7 @@ def load_model(model_name: str, model_dir: str, device: str):
     return model
 
 
-def test(model: AudioCNN, test_loader: DataLoader, criterion: nn.CrossEntropyLoss, device: str):
+def test(model, test_loader: DataLoader, criterion: nn.CrossEntropyLoss, device: str):
     model.eval()  # Set model to evaluation mode
     correct = 0
     total = 0
@@ -27,9 +27,10 @@ def test(model: AudioCNN, test_loader: DataLoader, criterion: nn.CrossEntropyLos
         for features, labels in test_loader:
             features, labels = features.to(device), labels.to(device)
 
-            # 前向传播
+            # 得到神经网络输出
             outputs = model(features)
-
+            print('type of outputs is:', type(outputs))
+            print('outputs = ', outputs)
             # 计算总损失函数值
             loss = criterion(outputs, labels)
             running_loss += loss.item()
@@ -46,7 +47,7 @@ def test(model: AudioCNN, test_loader: DataLoader, criterion: nn.CrossEntropyLos
 
 def test_urban_sound(model_name: str, cfg: HyperParameters):
     # 加载训练好的神经网络模型
-    model = load_model(model_name, cfg.test.load_path, cfg.test.device)
+    model = load_model(model_name, cfg.test.model_load_path, cfg.test.device)
 
     # 加载测试数据集
     test_dataset = AudioDataset(cfg.test)
@@ -64,5 +65,5 @@ def test_urban_sound(model_name: str, cfg: HyperParameters):
 
 if __name__ == "__main__":
     test_cfg = HyperParameters()
-    model_name = 'model_lr0.001_batch10_epoch500.pkl'
+    model_name = test_cfg.test.model_name
     test_urban_sound(model_name, test_cfg)

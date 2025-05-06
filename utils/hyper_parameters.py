@@ -19,29 +19,59 @@ class HyperParameters:
         linear_out_features = 10    # 数据集中的标签数量
 
 
+    class improvedCnn:
+        pass
+
+
+    class ResNet:
+        weights = None
+
+        conv_in_channels = 1
+        conv_out_channels = 64
+        stride = 2
+        kernel_size = 7
+        padding = 3
+        bias = False
+        linear_out_features = 10
+
+
     class train:
-        device = 'cpu'
-        database_dir = 'D:\\UrbanSound8K\\audio\\fold4\\'       # 绝对路径
-        save_dir = 'C:\\Users\\THP\\Desktop\\人工智能与机器学习方法\\UrbanSoundClassifier\\models\\'
+        device = 'cuda'
 
-        target_audio_len = 4        # 统一音频时长
-        target_beats_num = 32       # 统一音频节拍数
-        is_shuffle = True
+        is_origin_data = False
+        ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/train'
+        # ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch'
+        preproc_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/preprocessed_audios/train'
+
+        target_audio_len = 4        # 统一音频时长[s]
+        target_beats_num = 12       # 统一音频节拍数
+        is_shuffle = False
         
+        # current_net = 'CNN'
+        # current_net = 'Improved_CNN'
+        current_net = 'ResNet'
+        batch_size = 20
+        lr = 0.01
+        epochs = 50
 
-        batch_size = 10
-        lr = 0.005
-        epochs = 500
+        model_save_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/models/'
 
 
     class test:
-        device = 'cpu'
-        database_dir = 'D:\\UrbanSound8K\\audio\\fold6\\'       # 绝对路径
-        # database_dir = 'D:\\UrbanSound8K\\audio\\small_batch\\'       # 绝对路径
-        load_path = 'C:\\Users\\THP\\Desktop\\人工智能与机器学习方法\\UrbanSoundClassifier\\models\\'
+        device = 'cuda'
 
-        target_audio_len = 4        # 
-        target_beats_num = 32       # 
-        is_shuffle = True
+        is_origin_data = True
+        ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/test'
+        # ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch'
+        preproc_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/preprocessed_audios/test'
+
+        model_load_path = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/models/'
+        model_name = 'ResNet_model_lr0.005_batch20_epoch100.pkl'
+
+        target_audio_len = 4
+        target_beats_num = 12
+        is_shuffle = False
 
         batch_size = 10
+
+        
