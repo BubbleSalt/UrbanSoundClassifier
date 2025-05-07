@@ -38,40 +38,40 @@ class HyperParameters:
     class train:
         device = 'cuda'
 
-        is_origin_data = False
-        ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/train'
-        # ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch'
-        preproc_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/preprocessed_audios/train'
+        is_origin_data = True
+        ori_database_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/resources/UrbanSound8K/audio/train'
+        # ori_database_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch'
+        preproc_database_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/resources/preprocessed_audios/train'
 
         target_audio_len = 4        # 统一音频时长[s]
         target_beats_num = 12       # 统一音频节拍数
-        is_shuffle = False
+        is_shuffle = True
         
         # current_net = 'CNN'
         # current_net = 'Improved_CNN'
         current_net = 'ResNet'
-        batch_size = 20
-        lr = 0.01
-        epochs = 50
+        batch_size = 128
+        lr = 0.005
+        epochs = 1000
 
-        model_save_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/models/'
+        model_save_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/models/'
 
 
     class test:
         device = 'cuda'
 
         is_origin_data = True
-        ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/test'
-        # ori_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch'
-        preproc_database_dir = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/preprocessed_audios/test'
+        ori_database_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/resources/UrbanSound8K/audio/test'
+        # ori_database_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch'
+        preproc_database_dir = '/mnt/data1/data_shared/UrbanSoundClassifier/resources/preprocessed_audios/test'
 
-        model_load_path = '/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/models/'
-        model_name = 'ResNet_model_lr0.005_batch20_epoch100.pkl'
+        model_load_path = '/mnt/data1/data_shared/UrbanSoundClassifier/models/'
+        model_name = 'ResNet_model_lr0.005_batch128_epoch1000.pkl'
 
         target_audio_len = 4
         target_beats_num = 12
-        is_shuffle = False
+        is_shuffle = True
 
-        batch_size = 10
+        batch_size = 128
 
         

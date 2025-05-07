@@ -30,6 +30,7 @@ def train_per_epoch(model, train_loader: DataLoader, optimizer: torch.optim.Adam
         """
         print('type of X is:', type(X))
         print('shape of X is:', X.shape)
+        
         print('type of y is:', type(y))
         print('shape of y is:', y.shape)
         """
@@ -50,6 +51,8 @@ def train_per_epoch(model, train_loader: DataLoader, optimizer: torch.optim.Adam
         total_loss += loss.item()
         total_correct += (outputs.argmax(1) == y).sum().item()
 
+    print('END')
+
     return total_loss / len(train_loader), total_correct / len(train_loader.dataset)
 
 
@@ -65,8 +68,15 @@ def train_urban_sound(cfg: HyperParameters):
     dataloader = DataLoader(dataset, batch_size=cfg.train.batch_size, shuffle=cfg.train.is_shuffle)
 
     # 加载神经网络
-    # model = AudioCNN(cfg).to(cfg.train.device)
-    model = AudioResNet(cfg).to(cfg.train.device) 
+    if cfg.train.current_net == 'CNN':
+        model = AudioCNN(cfg).to(cfg.train.device)
+    elif cfg.train.current_net == 'Improved_CNN':
+        model = AudioImprovedCNN().to(cfg.train.device)
+    elif cfg.train.current_net == 'ResNet':
+        model = AudioResNet(cfg).to(cfg.train.device) 
+    else:
+        print('Error! No such Network!')
+        exit(0)
 
     # 加载优化器
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.train.lr)
@@ -85,16 +95,18 @@ def train_urban_sound(cfg: HyperParameters):
         except KeyboardInterrupt:
             break
 
+    print('END')
+
     return model
 
 if __name__ == "__main__":
     train_cfg = HyperParameters()
 
-    writer = SummaryWriter('/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/logs/' + train_cfg.train.current_net)
+    writer = SummaryWriter('/mnt/data1/data_shared/UrbanSoundClassifier/logs/' + train_cfg.train.current_net)
 
-    urban_sound_cnn = train_urban_sound(train_cfg)
+    urban_sound_model = train_urban_sound(train_cfg)
 
     # 保存神经网络模型
     model_name = f"{train_cfg.train.current_net}_model_lr{train_cfg.train.lr}_batch{train_cfg.train.batch_size}_epoch{train_cfg.train.epochs}.pkl"
     print(f"Model is saved at: {train_cfg.train.model_save_dir + model_name}")
-    torch.save(urban_sound_cnn, train_cfg.train.model_save_dir + model_name)
+    torch.save(urban_sound_model, train_cfg.train.model_save_dir + model_name)

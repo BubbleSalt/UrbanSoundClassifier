@@ -50,7 +50,7 @@ def extract_feature(wav_file):
 
 
         # 提取MFCC特征
-        mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+        mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13, hop_length=1024)
 
         # 计算MFCC特征的一阶差分
         mfccs_delta = librosa.feature.delta(mfccs)
@@ -60,7 +60,27 @@ def extract_feature(wav_file):
         print("MFCC特征的形状:", mfccs.shape)
         print("MFCC一阶差分特征的形状:", mfccs_delta.shape)
 
+        # 计算色度特征，表示音频信号在不同音高上的能量分布
+        chromagram = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=1024)
 
+        # 查看色度特征的形状
+        print("色度特征的形状:", chromagram.shape)
+
+        # 提取FBank特征
+        fbank_features = librosa.feature.melspectrogram(y=y, sr=sr, hop_length=1024)
+
+        # 查看FBank特征的形状
+        print("FBank特征的形状:", fbank_features.shape)
+
+        # 过零率
+        zrc = librosa.feature.zero_crossing_rate(y=y, hop_length=1024)
+        print("zrc特征的形状:", zrc.shape)
+        print(zrc)
+
+        # 频谱质心
+        sc = librosa.feature.spectral_centroid(y=y, hop_length=1024)
+        print("sc特征的形状:", sc.shape)
+        print(sc)
 
         # 将MFCC特征、MFCC一阶差分特征垂直堆叠，得到最终的特征矩阵
         final_features = np.vstack([mfccs, mfccs_delta])
@@ -80,12 +100,13 @@ def extract_feature(wav_file):
         print(type(audio_info[1]))
 
 
-
+def audio_explict_info(wav_file):
+    pass
 
 
 
 if __name__ == "__main__":
-    audios = glob.glob('/mnt/data0/data_shared/thp_data/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch/*.wav')
+    audios = glob.glob('/mnt/data1/data_shared/UrbanSoundClassifier/resources/UrbanSound8K/audio/small_batch/*.wav')
 
     print('type of audios:', type(audios))
     print('length of audios:', len(audios))

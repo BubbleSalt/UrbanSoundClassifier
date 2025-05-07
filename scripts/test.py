@@ -22,21 +22,37 @@ def test(model, test_loader: DataLoader, criterion: nn.CrossEntropyLoss, device:
     correct = 0
     total = 0
     running_loss = 0.0
+    counter = 0
 
     with torch.no_grad():  # No gradient calculation needed
         for features, labels in test_loader:
             features, labels = features.to(device), labels.to(device)
 
+            print('type of features is:', type(features))
+            print('shape of features is:', features.shape)
+            print('type of labels is:', type(labels))
+            print('shape of labels is:', labels.shape)
+
+            counter += 1
+
             # 得到神经网络输出
             outputs = model(features)
             print('type of outputs is:', type(outputs))
+            print('shape of outputs is:', outputs.shape)
             print('outputs = ', outputs)
+
+            print(counter)
+
             # 计算总损失函数值
             loss = criterion(outputs, labels)
             running_loss += loss.item()
 
             # 输出预测结果标签
             _, predicted = torch.max(outputs, 1)
+            print('shape of predicted is:', predicted.shape)
+            print(predicted)
+            print(labels)
+
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
@@ -53,8 +69,6 @@ def test_urban_sound(model_name: str, cfg: HyperParameters):
     test_dataset = AudioDataset(cfg.test)
     test_dataloader = DataLoader(test_dataset, batch_size=cfg.test.batch_size, shuffle=cfg.test.is_shuffle)
 
-    
-
     # 加载损失函数
     criterion = nn.CrossEntropyLoss()
 
@@ -66,4 +80,5 @@ def test_urban_sound(model_name: str, cfg: HyperParameters):
 if __name__ == "__main__":
     test_cfg = HyperParameters()
     model_name = test_cfg.test.model_name
+    print('Loaded model name:',model_name)
     test_urban_sound(model_name, test_cfg)

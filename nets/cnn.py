@@ -8,7 +8,7 @@ class AudioCNN(nn.Module):
         用于音频分类的卷积神经网络
     """
     def __init__(self, cfg: HyperParameters):
-        super().__init__()
+        super(AudioCNN, self).__init__()
         self.conv1 = nn.Conv2d( in_channels=cfg.cnn.conv1_in_channels,
                                 out_channels=cfg.cnn.conv1_out_channels,
                                 kernel_size=cfg.cnn.conv1_kernel_size,
