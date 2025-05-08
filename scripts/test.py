@@ -10,6 +10,7 @@ from utils.preprocess import AudioDataset
 from nets.cnn import AudioCNN
 from utils.hyper_parameters import HyperParameters
 
+from utils.visualization import urbansounds_confusion_matrix
 
 def load_model(model_name: str, model_dir: str, device: str):
     # model = torch.load(model_dir + model_name, map_location=torch.device(device), weights_only=False)
@@ -23,6 +24,9 @@ def test(model, test_loader: DataLoader, criterion: nn.CrossEntropyLoss, device:
     total = 0
     running_loss = 0.0
     counter = 0
+
+    all_predicted_classes = []
+    all_real_classes = []
 
     with torch.no_grad():  # No gradient calculation needed
         for features, labels in test_loader:
@@ -49,16 +53,27 @@ def test(model, test_loader: DataLoader, criterion: nn.CrossEntropyLoss, device:
 
             # 输出预测结果标签
             _, predicted = torch.max(outputs, 1)
+            print('type of predicted is:', type(predicted))
             print('shape of predicted is:', predicted.shape)
-            print(predicted)
-            print(labels)
+            # print(predicted)
+
+            print('shape of labels is:', labels.shape)
+            # print(labels)
+
+            all_predicted_classes.extend(predicted.tolist())
+            all_real_classes.extend(labels.tolist())
 
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+    print('length of predicted is:', len(all_predicted_classes))    
+    # print(all_predicted_classes)
+    print('length of labels is:', len(all_real_classes)) 
+    # print(all_real_classes)
+
     avg_loss = running_loss / len(test_loader)
     accuracy = correct / total
-    return avg_loss, accuracy
+    return avg_loss, accuracy, all_predicted_classes, all_real_classes
 
 
 def test_urban_sound(model_name: str, cfg: HyperParameters):
@@ -73,8 +88,10 @@ def test_urban_sound(model_name: str, cfg: HyperParameters):
     criterion = nn.CrossEntropyLoss()
 
     # 进行测试
-    test_loss, test_acc = test(model, test_dataloader, criterion, cfg.test.device)
+    test_loss, test_acc, real_classes, predicted_classes = test(model, test_dataloader, criterion, cfg.test.device)
     print(f"Test Loss = {test_loss:.4f}, Test Accuracy = {test_acc*100:.2f}%")
+
+    urbansounds_confusion_matrix(real_classes, predicted_classes)
 
 
 if __name__ == "__main__":
