@@ -24,7 +24,7 @@ class AudioImprovedResNet(nn.Module):
         assert isinstance(cfg.ResNet.bias, bool), "Invalid bias value for conv1"
         assert isinstance(cfg.ResNet.linear_out_features, int) and cfg.ResNet.linear_out_features > 0, "Invalid output features for fc layer"
 
-        # 加载预训练的 ResNet-18 模型
+        # 加载 ResNet-18 模型
         self.resnet = resnet18(weights=cfg.ResNet.weights)
 
         # 修改输入卷积层以适应音频数据

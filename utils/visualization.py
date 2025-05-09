@@ -14,13 +14,10 @@ def urbansounds_confusion_matrix( y_real, y_pred):
     # 计算混淆矩阵
     for true, pred in zip(y_real, y_pred):
         cm[true, pred] += 1
+
     # 计算百分比
     sum_per_real_class = np.sum(cm, axis=1)
-    for i in range(cm.shape[0]):
-            print(cm[i, :])
-    
     percentage_cm = cm / sum_per_real_class[ : , None]
-    print(percentage_cm)
 
     # 绘制混淆矩阵
     fig, ax = plt.subplots(figsize=(12, 9))

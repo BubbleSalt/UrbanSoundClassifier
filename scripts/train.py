@@ -14,6 +14,9 @@ from utils.preprocess import AudioDataset
 from nets.cnn import AudioCNN
 from nets.improved_cnn import AudioImprovedCNN
 from nets.ResNet import AudioResNet
+from nets.improved_Resnet import AudioImprovedResNet
+from nets.SelfAttentionNet import SelfAttentionClassifier
+from nets.TCN import TCNClassifier
 
 
 """模型训练函数"""
@@ -66,7 +69,7 @@ def train_urban_sound(cfg: HyperParameters):
     # 加载训练数据集
     dataset = AudioDataset(cfg.train)
     dataloader = DataLoader(dataset, batch_size=cfg.train.batch_size, shuffle=cfg.train.is_shuffle)
-
+    print(cfg.train.current_net)
     # 加载神经网络
     if cfg.train.current_net == 'CNN':
         model = AudioCNN(cfg).to(cfg.train.device)
@@ -74,10 +77,20 @@ def train_urban_sound(cfg: HyperParameters):
         model = AudioImprovedCNN().to(cfg.train.device)
     elif cfg.train.current_net == 'ResNet':
         model = AudioResNet(cfg).to(cfg.train.device) 
+    elif cfg.train.current_net == 'improved_ResNet':
+        model = AudioImprovedResNet(cfg).to(cfg.train.device)
+    elif cfg.train.current_net == 'SelfAttentionNet':
+        model = SelfAttentionClassifier(cfg).to(cfg.train.device)
+    elif cfg.train.current_net == 'tcn':
+        model = TCNClassifier(cfg).to(cfg.train.device)
     else:
         print('Error! No such Network!')
         exit(0)
 
+    # 使用DataParallel包装模型，实现数据并行
+    if torch.cuda.device_count() > 1:
+        print(f"Using {torch.cuda.device_count()} GPUs for training!")
+        model = nn.DataParallel(model)
     # 加载优化器
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.train.lr)
 
@@ -100,6 +113,7 @@ def train_urban_sound(cfg: HyperParameters):
     return model
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"  # 使用GPU 0和1
     train_cfg = HyperParameters()
 
     writer = SummaryWriter('/mnt/data1/data_shared/UrbanSoundClassifier/logs/' + train_cfg.train.current_net)

@@ -1,6 +1,6 @@
 from torchvision.models import resnet18
 import torch.nn as nn
-
+import torch.nn.init as init
 from utils.hyper_parameters import HyperParameters
 
 class AudioResNet(nn.Module):
@@ -23,3 +23,4 @@ class AudioResNet(nn.Module):
 
     def forward(self, x):
         return self.resnet(x)
+

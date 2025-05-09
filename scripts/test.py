@@ -66,9 +66,9 @@ def test(model, test_loader: DataLoader, criterion: nn.CrossEntropyLoss, device:
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-    print('length of predicted is:', len(all_predicted_classes))    
+    # print('length of predicted is:', len(all_predicted_classes))    
     # print(all_predicted_classes)
-    print('length of labels is:', len(all_real_classes)) 
+    # print('length of labels is:', len(all_real_classes)) 
     # print(all_real_classes)
 
     avg_loss = running_loss / len(test_loader)

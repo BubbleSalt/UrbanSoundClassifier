@@ -37,7 +37,7 @@ class AudioImprovedCNN(nn.Module):
         )
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(128 * 4 * 21, 256),
+            nn.Linear(128 * 5 * 10, 256),
             nn.ReLU(),
             
             nn.Dropout(0.5),
