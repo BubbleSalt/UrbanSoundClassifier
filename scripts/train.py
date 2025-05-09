@@ -17,7 +17,7 @@ from nets.ResNet import AudioResNet
 from nets.improved_Resnet import AudioImprovedResNet
 from nets.SelfAttentionNet import SelfAttentionClassifier
 from nets.TCN import TCNClassifier
-
+from nets.ResNetSE import AudioResNetSE
 
 """模型训练函数"""
 def train_per_epoch(model, train_loader: DataLoader, optimizer: torch.optim.Adam, criterion: nn.CrossEntropyLoss, device: str):
@@ -83,6 +83,8 @@ def train_urban_sound(cfg: HyperParameters):
         model = SelfAttentionClassifier(cfg).to(cfg.train.device)
     elif cfg.train.current_net == 'tcn':
         model = TCNClassifier(cfg).to(cfg.train.device)
+    elif cfg.train.current_net == 'ResNetSE':
+        model = AudioResNetSE(cfg).to(cfg.train.device) 
     else:
         print('Error! No such Network!')
         exit(0)
